@@ -229,6 +229,21 @@ public class VenderCoche extends javax.swing.JFrame {
 
     private void enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterActionPerformed
         String err = "";
+        if (modelo.getText().isBlank()) {
+            err += "El modelo no puede estar vacío\n";
+        }
+        if (color.getText().isBlank()) {
+            err += "El color no puede estar vacío\n";
+        }
+        if (matricula.getText().isBlank()) {
+            err += "La matrícula no puede estar vacía\n";
+        }
+        if (precio.getText().isBlank()) {
+            err += "El precio no puede estar vacío\n";
+        }
+        if (kilometros.getText().isBlank()) {
+            err += "Los kilómetros no pueden estar vacíos\n";
+        }
         //Validación matrícula
         String m = matricula.getText();
         boolean error = false;

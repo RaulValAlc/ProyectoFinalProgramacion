@@ -1,6 +1,6 @@
 CREATE TABLE login (
     usuario VARCHAR(20) PRIMARY KEY,
-    contrasena VARCHAR(30) NOT NULL,
+    contrasena VARCHAR(60) NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL
 );
 

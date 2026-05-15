@@ -32,7 +32,7 @@ public class Estadisticas extends javax.swing.JFrame {
         this.conn = conn;
         this.u = u;
         nombre.setText(u.getNombre());
-        contrasena.setText(u.getContrasena());
+        contrasena.setText("********");
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT email FROM login WHERE usuario = ?");
             ps.setString(1, u.getNombre());
@@ -202,17 +202,18 @@ public class Estadisticas extends javax.swing.JFrame {
     private void exportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportarActionPerformed
         try {
             FileWriter fw = new FileWriter("datos.csv");
-            fw.write("usuario,email,cochesEnVenta\n");
-            fw.write(nombre.getText() + "," + email.getText() + "," + coches.getText() + "\n");
-            fw.write("matricula,modelo,color,kilometros,precio\n");
+            fw.write("usuario;email;cochesEnVenta\n");
+            fw.write(nombre.getText() + ";" + email.getText() + ";" + coches.getText() + "\n");
+            fw.write("matricula;modelo;color;kilometros;precio\n");
             PreparedStatement ps = conn.prepareStatement("SELECT matricula,modelo,color,kilometros,precio FROM coches WHERE email = (SELECT email FROM login WHERE usuario = ?)");
             ps.setString(1, u.getNombre());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                fw.write(rs.getString("matricula") + "," + rs.getString("modelo") + "," + rs.getString("color") + "," + String.valueOf(rs.getInt("kilometros")) + "," + String.valueOf(rs.getDouble("precio")) + "\n");
+                fw.write(rs.getString("matricula") + ";" + rs.getString("modelo") + ";" + rs.getString("color") + ";" + String.valueOf(rs.getInt("kilometros")) + ";" + String.valueOf(rs.getDouble("precio")) + "\n");
             }
             rs.close();
             ps.close();
+            fw.close();
             JOptionPane.showMessageDialog(null, "Datos personales y de coches exportados con éxito revisa la carpeta del proyecto");
         } catch (IOException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error -> " + e.getMessage(), "Error Fichero/Base de Datos", JOptionPane.ERROR);

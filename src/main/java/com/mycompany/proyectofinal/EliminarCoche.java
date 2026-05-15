@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 public class EliminarCoche extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EliminarCoche.class.getName());
+    private User u;
     private VentanaPrincipal vp;
     private Connection conn;
 
@@ -27,8 +28,12 @@ public class EliminarCoche extends javax.swing.JFrame {
      */
     public EliminarCoche(User u, VentanaPrincipal vp, Connection conn) {
         initComponents();
+        this.u = u;
         this.vp = vp;
         this.conn = conn;
+    }
+
+    public void llenarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         modelo.setRowCount(0);
         try {

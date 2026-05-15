@@ -6,8 +6,8 @@ package com.mycompany.proyectofinal;
 
 import java.awt.*;
 import java.sql.*;
-import java.sql.Statement;
 import javax.swing.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -131,6 +131,12 @@ public class VentanaLogin extends javax.swing.JFrame {
         lLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lLabel.setText("Acceso a tu seccion usuario");
 
+        password.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordActionPerformed(evt);
+            }
+        });
+
         mostrar.setText("Mostrar Contraseña");
         mostrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,28 +258,80 @@ public class VentanaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_registerActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
+        if (conn == null) {
+            JOptionPane.showMessageDialog(null, "No hay conexión con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String usuario = user.getText();
+        String pass = new String(password.getPassword());
+        if (usuario.isBlank()) {
+            JOptionPane.showMessageDialog(null, "El usuario no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (pass.isBlank()) {
+            JOptionPane.showMessageDialog(null, "La contraseña no puede estar vacía", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT contrasena FROM login WHERE usuario = ?");
-            ps.setString(1, user.getText());
+            ps.setString(1, usuario);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                String passwd = rs.getString("contrasena");
-                if (!passwd.equals(new String(password.getPassword()))) {
-                    JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Error contraseña", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    VentanaPrincipal vp = new VentanaPrincipal(new User(user.getText(), password.getText()), conn);
+                String hash = rs.getString("contrasena");
+                if (verificarContrasena(pass, hash)) {
+                    VentanaPrincipal vp = new VentanaPrincipal(new User(usuario), conn);
                     vp.setLocationRelativeTo(null);
                     this.dispose();
                     vR.dispose();
                     vp.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Error contraseña", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Usuario no encontrado, revisa el usuario introducido", "Error Usuario", JOptionPane.ERROR_MESSAGE);
             }
+            rs.close();
+            ps.close();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error con la base de datos: \n" + e.getMessage(), "Error Base de Datos", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_loginActionPerformed
+
+    private boolean verificarContrasena(String pass, String hash) {
+        try {
+            if (BCrypt.checkpw(pass, hash)) {
+                return true;
+            }
+        } catch (IllegalArgumentException e) {
+            // Hash no es bcrypt válido (texto plano o truncado)
+        }
+        if (hash.startsWith("$2a$") && hash.length() >= 29 && hash.length() < 60) {
+            String salt = hash.substring(0, 29);
+            String fullHash = BCrypt.hashpw(pass, salt);
+            if (fullHash.startsWith(hash)) {
+                try {
+                    PreparedStatement ps = conn.prepareStatement("UPDATE login SET contrasena = ? WHERE usuario = ?");
+                    ps.setString(1, fullHash);
+                    ps.setString(2, user.getText());
+                    ps.executeUpdate();
+                    ps.close();
+                } catch (SQLException ex) { }
+                return true;
+            }
+        }
+        //Contraseña en texto plano (versión antigua)
+        if (hash.equals(pass)) {
+            try {
+                PreparedStatement ps = conn.prepareStatement("UPDATE login SET contrasena = ? WHERE usuario = ?");
+                ps.setString(1, BCrypt.hashpw(pass, BCrypt.gensalt()));
+                ps.setString(2, user.getText());
+                ps.executeUpdate();
+                ps.close();
+            } catch (SQLException ex) { }
+            return true;
+        }
+        return false;
+    }
 
     private void mostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarActionPerformed
         if (!mostrar.isSelected()) {
@@ -282,6 +340,10 @@ public class VentanaLogin extends javax.swing.JFrame {
             password.setEchoChar((char) 0);
         }
     }//GEN-LAST:event_mostrarActionPerformed
+
+    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
+        login.doClick();
+    }//GEN-LAST:event_passwordActionPerformed
 
     public void limpiar() {
         user.setText(null);

@@ -16,6 +16,7 @@ public class EditarCoche extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditarCoche.class.getName());
     private VentanaPrincipal vp;
     private Connection conn;
+    private User user;
 
     /**
      * Creates new form EditarCoche
@@ -28,7 +29,7 @@ public class EditarCoche extends javax.swing.JFrame {
         initComponents();
         this.vp = vp;
         this.conn = conn;
-
+        this.user = u;
     }
 
     public void limpiar() {
@@ -98,28 +99,24 @@ public class EditarCoche extends javax.swing.JFrame {
             }
         });
 
-        modelo.setEditable(false);
         modelo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modeloActionPerformed(evt);
             }
         });
 
-        color.setEditable(false);
         color.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorActionPerformed(evt);
             }
         });
 
-        kilometros.setEditable(false);
         kilometros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kilometrosActionPerformed(evt);
             }
         });
 
-        precio.setEditable(false);
         precio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 precioActionPerformed(evt);
@@ -214,10 +211,24 @@ public class EditarCoche extends javax.swing.JFrame {
 
     private void matriculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matriculaActionPerformed
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT modelo,color,kilometros,precio FROM coches WHERE matricula = ?");
+            PreparedStatement ps = conn.prepareStatement("SELECT modelo,color,kilometros,precio,email FROM coches WHERE matricula = ?");
             ps.setString(1, matricula.getText());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                String propietarioEmail = rs.getString("email");
+                PreparedStatement psUser = conn.prepareStatement("SELECT email FROM login WHERE usuario = ?");
+                psUser.setString(1, user.getNombre());
+                ResultSet rsUser = psUser.executeQuery();
+                rsUser.next();
+                String userEmail = rsUser.getString("email");
+                rsUser.close();
+                psUser.close();
+                if (!propietarioEmail.equals(userEmail)) {
+                    JOptionPane.showMessageDialog(null, "Este coche no te pertenece, no puedes editarlo", "Sin permisos", JOptionPane.ERROR_MESSAGE);
+                    rs.close();
+                    ps.close();
+                    return;
+                }
                 modelo.setText(rs.getString("modelo"));
                 color.setText(rs.getString("color"));
                 kilometros.setText(String.valueOf(rs.getInt("kilometros")));

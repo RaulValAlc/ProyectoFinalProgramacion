@@ -222,6 +222,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="password">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="passwordActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="mostrar">
       <Properties>

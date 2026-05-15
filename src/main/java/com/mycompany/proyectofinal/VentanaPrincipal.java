@@ -7,6 +7,7 @@ package com.mycompany.proyectofinal;
 import java.awt.Image;
 import java.sql.*;
 import javax.swing.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -277,6 +278,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
         elC.setLocationRelativeTo(null);
+        elC.llenarTabla();
         this.setVisible(false);
         elC.setVisible(true);
     }//GEN-LAST:event_eliminarActionPerformed
@@ -289,13 +291,32 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_editarActionPerformed
 
     private void statsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsActionPerformed
-        String c = JOptionPane.showInputDialog("Contraseña: ");
-        if (c.equals(user.getContrasena())) {
-            e.setLocationRelativeTo(null);
-            this.setVisible(false);
-            e.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Contraseña errónea", JOptionPane.ERROR_MESSAGE);
+        JPasswordField pwd = new JPasswordField();
+        JPanel panel = new JPanel(new java.awt.BorderLayout());
+        panel.add(new JLabel("Contraseña: "), java.awt.BorderLayout.WEST);
+        panel.add(pwd, java.awt.BorderLayout.CENTER);
+        int opcion = JOptionPane.showConfirmDialog(null, panel, "Verificar contraseña", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (opcion == JOptionPane.OK_OPTION) {
+            String pass = new String(pwd.getPassword());
+            try {
+                PreparedStatement ps = conn.prepareStatement("SELECT contrasena FROM login WHERE usuario = ?");
+                ps.setString(1, user.getNombre());
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    String hash = rs.getString("contrasena");
+                    if (BCrypt.checkpw(pass, hash)) {
+                        e.setLocationRelativeTo(null);
+                        this.setVisible(false);
+                        e.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Contraseña errónea", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                rs.close();
+                ps.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error con la base de datos", "Error Base de Datos", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_statsActionPerformed
 

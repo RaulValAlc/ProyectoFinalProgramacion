@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import javax.swing.JOptionPane;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -218,11 +219,15 @@ public class VentanaRegistro extends javax.swing.JFrame {
         } else {
             errores += "El usuario no puede estar vacío \n";
         }
+        boolean especial = false;
         for (int i = 0; i < n.length(); i++) {
             char c = n.charAt(i);
             if (!Character.isDigit(c) && !Character.isLetter(c)) {
-                errores += "El nombre de usuario no puede contener caracteres especiales \n";
+                especial = true;
             }
+        }
+        if (especial) {
+            errores += "El nombre de usuario no puede contener caracteres especiales \n";
         }
         // Validación del email
         String e = email.getText();
@@ -280,7 +285,7 @@ public class VentanaRegistro extends javax.swing.JFrame {
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO login(usuario,contrasena,email) "
                         + "VALUES(?,?,?)");
                 ps.setString(1, n);
-                ps.setString(2, p);
+                ps.setString(2, BCrypt.hashpw(p, BCrypt.gensalt()));
                 ps.setString(3, e);
                 ps.executeUpdate();
                 ps.close();
