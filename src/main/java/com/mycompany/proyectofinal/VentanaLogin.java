@@ -259,7 +259,7 @@ public class VentanaLogin extends javax.swing.JFrame {
             if(!passwd.equals(password.getText())){
                 JOptionPane.showMessageDialog(null, "Contraseña incorrecta","Error contraseña",JOptionPane.ERROR_MESSAGE);
             }else{
-                VentanaPrincipal vp = new VentanaPrincipal(new User(user.getText(),password.getText()));
+                VentanaPrincipal vp = new VentanaPrincipal(new User(user.getText(),password.getText()),conn);
                 vp.setLocationRelativeTo(null);
                 this.dispose();
                 vR.dispose();

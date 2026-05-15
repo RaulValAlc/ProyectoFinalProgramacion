@@ -4,20 +4,102 @@
  */
 package com.mycompany.proyectofinal;
 
+import java.awt.Image;
+import java.sql.*;
+import javax.swing.*;
+
 /**
  *
  * @author Alumno
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
     private User user;
+    private ComprarCoche cC;
+    private VenderCoche vC;
+    private EditarCoche edC;
+    private EliminarCoche elC;
+    private Estadisticas e;
+    private Connection conn;
+    
     /**
      * Creates new form VentanaPrincipal
+     *
+     * @param u
+     * @param conn
      */
-    public VentanaPrincipal(User u) {
+    public VentanaPrincipal(User u,Connection conn) {
         initComponents();
         user = u;
+        this.conn = conn;
+        saludo.setText("Hola " + user.getNombre());
+        saludo.setHorizontalAlignment(SwingConstants.CENTER);//no funciona bien el que se ajusta en el menu de netbeans
+        cC = new ComprarCoche(user,this,conn);
+        vC = new VenderCoche(user,this,conn);
+        edC = new EditarCoche(user,this,conn);
+        elC = new EliminarCoche(user,this,conn);
+        e = new Estadisticas(user,this,conn);
+        //Comprar
+        ImageIcon imagen = new ImageIcon("comprar.jpg");
+        Image img = imagen.getImage();
+        Image imgE = img.getScaledInstance(
+                42,
+                42,
+                Image.SCALE_SMOOTH
+        );
+        comprar.setIcon(new ImageIcon(imgE));
+        comprar.setText("Comprar Coche");
+        comprar.setHorizontalTextPosition(SwingConstants.LEFT);
+        comprar.setIconTextGap(10);
+        //Vender
+        ImageIcon imagen2 = new ImageIcon("vender.jpg");
+        Image img2 = imagen2.getImage();
+        Image imgE2 = img2.getScaledInstance(
+                42,
+                42,
+                Image.SCALE_SMOOTH
+        );
+        vender.setIcon(new ImageIcon(imgE2));
+        vender.setText("Vender Coche");
+        vender.setHorizontalTextPosition(SwingConstants.LEFT);
+        vender.setIconTextGap(10);
+        //Editar
+        ImageIcon imagen3 = new ImageIcon("editar.png");
+        Image img3 = imagen3.getImage();
+        Image imgE3 = img3.getScaledInstance(
+                42,
+                42,
+                Image.SCALE_SMOOTH
+        );
+        editar.setIcon(new ImageIcon(imgE3));
+        editar.setText("Editar Coche");
+        editar.setHorizontalTextPosition(SwingConstants.LEFT);
+        editar.setIconTextGap(10);
+        //Eliminar
+        ImageIcon imagen4 = new ImageIcon("eliminar.jpg");
+        Image img4 = imagen4.getImage();
+        Image imgE4 = img4.getScaledInstance(
+                42,
+                42,
+                Image.SCALE_SMOOTH
+        );
+        eliminar.setIcon(new ImageIcon(imgE4));
+        eliminar.setText("Eliminar Coche");
+        eliminar.setHorizontalTextPosition(SwingConstants.LEFT);
+        eliminar.setIconTextGap(10);
+        //Estadísticas
+        ImageIcon imagen5 = new ImageIcon("estadisticas.png");
+        Image img5 = imagen5.getImage();
+        Image imgE5 = img5.getScaledInstance(
+                42,
+                42,
+                Image.SCALE_SMOOTH
+        );
+        stats.setIcon(new ImageIcon(imgE5));
+        stats.setText("Estadísticas");
+        stats.setHorizontalTextPosition(SwingConstants.LEFT);
+        stats.setIconTextGap(10);
     }
 
     private VentanaPrincipal() {
@@ -33,21 +115,184 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        saludo = new javax.swing.JLabel();
+        comprar = new javax.swing.JButton();
+        vender = new javax.swing.JButton();
+        editar = new javax.swing.JButton();
+        eliminar = new javax.swing.JButton();
+        desarrollo = new javax.swing.JButton();
+        stats = new javax.swing.JButton();
+        salir = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Ventana Personal");
+
+        saludo.setFont(new java.awt.Font("Segoe UI Emoji", 1, 24)); // NOI18N
+        saludo.setForeground(new java.awt.Color(0, 0, 255));
+        saludo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        comprar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        comprar.setText("COMPRAR COCHE");
+        comprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comprarActionPerformed(evt);
+            }
+        });
+
+        vender.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        vender.setText("VENDER COCHE");
+        vender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                venderActionPerformed(evt);
+            }
+        });
+
+        editar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        editar.setText("EDITAR COCHE");
+        editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarActionPerformed(evt);
+            }
+        });
+
+        eliminar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        eliminar.setText("ELIMINAR COCHE");
+        eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarActionPerformed(evt);
+            }
+        });
+
+        desarrollo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        desarrollo.setText("EN DESARROLLO...");
+        desarrollo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                desarrolloActionPerformed(evt);
+            }
+        });
+
+        stats.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        stats.setText("ESTADÍSTICAS");
+        stats.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statsActionPerformed(evt);
+            }
+        });
+
+        salir.setBackground(new java.awt.Color(255, 153, 153));
+        salir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        salir.setText("SALIR");
+        salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(desarrollo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(stats, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(comprar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(vender, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(saludo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(162, 162, 162)
+                        .addComponent(salir)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(saludo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comprar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(vender, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(desarrollo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(stats, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(salir)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
+        this.dispose();
+        System.exit(0);
+    }//GEN-LAST:event_salirActionPerformed
+
+    private void desarrolloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desarrolloActionPerformed
+        ImageIcon imagen = new ImageIcon("construccion.jpg");
+        Image img = imagen.getImage();
+
+        Image imgEs = img.getScaledInstance(
+                64,
+                64,
+                Image.SCALE_SMOOTH
+        );
+
+        ImageIcon icono = new ImageIcon(imgEs);
+        JOptionPane.showMessageDialog(null, "Apartado en Construcción", "En Construcción", JOptionPane.INFORMATION_MESSAGE, icono);
+    }//GEN-LAST:event_desarrolloActionPerformed
+
+    private void comprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comprarActionPerformed
+        cC.setLocationRelativeTo(null);
+        cC.llenarTabla();
+        this.setVisible(false);
+        cC.setVisible(true);
+    }//GEN-LAST:event_comprarActionPerformed
+
+    private void venderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_venderActionPerformed
+        vC.setLocationRelativeTo(null);
+        vC.limpiar();
+        this.setVisible(false);
+        vC.setVisible(true);
+    }//GEN-LAST:event_venderActionPerformed
+
+    private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
+        elC.setLocationRelativeTo(null);
+        this.setVisible(false);
+        elC.setVisible(true);
+    }//GEN-LAST:event_eliminarActionPerformed
+
+    private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
+        edC.setLocationRelativeTo(null);
+        edC.limpiar();
+        this.setVisible(false);
+        edC.setVisible(true);
+    }//GEN-LAST:event_editarActionPerformed
+
+    private void statsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsActionPerformed
+        e.setLocationRelativeTo(null);
+        this.setVisible(false);
+        e.setVisible(true);
+    }//GEN-LAST:event_statsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -75,5 +320,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton comprar;
+    private javax.swing.JButton desarrollo;
+    private javax.swing.JButton editar;
+    private javax.swing.JButton eliminar;
+    private javax.swing.JButton salir;
+    private javax.swing.JLabel saludo;
+    private javax.swing.JButton stats;
+    private javax.swing.JButton vender;
     // End of variables declaration//GEN-END:variables
 }

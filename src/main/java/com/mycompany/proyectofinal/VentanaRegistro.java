@@ -266,8 +266,8 @@ public class VentanaRegistro extends javax.swing.JFrame {
                 PreparedStatement ps = conn.prepareStatement("INSERT INTO login(usuario,contrasena,email) "
                         + "VALUES(?,?,?)");
                 ps.setString(1, n);
-                ps.setString(2, e);
-                ps.setString(3, p);
+                ps.setString(2, p);
+                ps.setString(3, e);
                 ps.executeUpdate();
                 ps.close();
                 JOptionPane.showMessageDialog(null, "Usuario Registrado correctamente");
