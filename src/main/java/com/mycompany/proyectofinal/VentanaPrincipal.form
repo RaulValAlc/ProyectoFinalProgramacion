@@ -136,7 +136,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="12" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="ELIMINAR COCHE"/>
+        <Property name="text" type="java.lang.String" value="ELIMINAR ANUNCIO"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eliminarActionPerformed"/>
@@ -158,7 +158,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="12" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="ESTAD&#xcd;STICAS"/>
+        <Property name="text" type="java.lang.String" value="PERFIL"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="statsActionPerformed"/>

@@ -28,7 +28,7 @@ public class VentanaRegistro extends javax.swing.JFrame {
         initComponents();
         this.vL = vL;
         conn = c;
-        ImageIcon imagen = new ImageIcon("C:\\Users\\Alumno\\Documents\\NetBeansProjects\\ProyectoFinal/imagenRegistro.jpg");
+        ImageIcon imagen = new ImageIcon("imagenRegistro.jpg");
         Image img = imagen.getImage();
         Image imgEscalada = img.getScaledInstance(
                 icono.getWidth(),
@@ -221,7 +221,7 @@ public class VentanaRegistro extends javax.swing.JFrame {
         for (int i = 0; i < n.length(); i++) {
             char c = n.charAt(i);
             if (!Character.isDigit(c) && !Character.isLetter(c)) {
-                errores += "El nombre de usuario no puede contener carácteres especiales \n";
+                errores += "El nombre de usuario no puede contener caracteres especiales \n";
             }
         }
         // Validación del email

@@ -22,24 +22,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private EliminarCoche elC;
     private Estadisticas e;
     private Connection conn;
-    
+
     /**
      * Creates new form VentanaPrincipal
      *
      * @param u
      * @param conn
      */
-    public VentanaPrincipal(User u,Connection conn) {
+    public VentanaPrincipal(User u, Connection conn) {
         initComponents();
         user = u;
         this.conn = conn;
         saludo.setText("Hola " + user.getNombre());
         saludo.setHorizontalAlignment(SwingConstants.CENTER);//no funciona bien el que se ajusta en el menu de netbeans
-        cC = new ComprarCoche(user,this,conn);
-        vC = new VenderCoche(user,this,conn);
-        edC = new EditarCoche(user,this,conn);
-        elC = new EliminarCoche(user,this,conn);
-        e = new Estadisticas(user,this,conn);
+        cC = new ComprarCoche(user, this, conn);
+        vC = new VenderCoche(user, this, conn);
+        edC = new EditarCoche(user, this, conn);
+        elC = new EliminarCoche(user, this, conn);
+        e = new Estadisticas(user, this, conn);
         //Comprar
         ImageIcon imagen = new ImageIcon("comprar.jpg");
         Image img = imagen.getImage();
@@ -156,7 +156,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
 
         eliminar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        eliminar.setText("ELIMINAR COCHE");
+        eliminar.setText("ELIMINAR ANUNCIO");
         eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eliminarActionPerformed(evt);
@@ -172,7 +172,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
 
         stats.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        stats.setText("ESTADÍSTICAS");
+        stats.setText("PERFIL");
         stats.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 statsActionPerformed(evt);
@@ -289,9 +289,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_editarActionPerformed
 
     private void statsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statsActionPerformed
-        e.setLocationRelativeTo(null);
-        this.setVisible(false);
-        e.setVisible(true);
+        String c = JOptionPane.showInputDialog("Contraseña: ");
+        if (c.equals(user.getContrasena())) {
+            e.setLocationRelativeTo(null);
+            this.setVisible(false);
+            e.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Contraseña errónea", JOptionPane.CANCEL_OPTION);
+        }
     }//GEN-LAST:event_statsActionPerformed
 
     /**

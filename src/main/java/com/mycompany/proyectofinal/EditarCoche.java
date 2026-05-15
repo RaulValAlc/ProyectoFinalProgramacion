@@ -218,12 +218,10 @@ public class EditarCoche extends javax.swing.JFrame {
             ps.setString(1, matricula.getText());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                do {
-                    modelo.setText(rs.getString("modelo"));
-                    color.setText(rs.getString("color"));
-                    kilometros.setText(String.valueOf(rs.getInt("kilometros")));
-                    precio.setText(String.valueOf(rs.getDouble("precio")));
-                } while (rs.next());
+                modelo.setText(rs.getString("modelo"));
+                color.setText(rs.getString("color"));
+                kilometros.setText(String.valueOf(rs.getInt("kilometros")));
+                precio.setText(String.valueOf(rs.getDouble("precio")));
             } else {
                 JOptionPane.showMessageDialog(null, "Matricula no encontrada", "Matrícula no encontrada", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -289,8 +287,7 @@ public class EditarCoche extends javax.swing.JFrame {
         //Update
         if (err.isBlank()) {
             try {
-                PreparedStatement ps = conn.prepareStatement("UPDATE coches(modelo,color,kilometros,precio) "
-                        + "SET modelo = ?, color = ?, kilometros = ?, precio = ? WHERE matricula = ?");
+                PreparedStatement ps = conn.prepareStatement("UPDATE coches SET modelo = ?, color = ?, kilometros = ?, precio = ? WHERE matricula = ?");
                 ps.setString(1, modelo.getText());
                 ps.setString(2, color.getText());
                 ps.setInt(3, km);

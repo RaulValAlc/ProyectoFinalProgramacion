@@ -5,19 +5,23 @@
 package com.mycompany.proyectofinal;
 
 import java.sql.*;
+import javax.swing.JOptionPane;
+import java.io.*;
 
 /**
  *
  * @author Alumno
  */
 public class Estadisticas extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Estadisticas.class.getName());
     private VentanaPrincipal vp;
     private Connection conn;
-    
+    private User u;
+
     /**
      * Creates new form Estadisticas
+     *
      * @param u
      * @param vp
      * @param conn
@@ -26,7 +30,27 @@ public class Estadisticas extends javax.swing.JFrame {
         initComponents();
         this.vp = vp;
         this.conn = conn;
-        
+        this.u = u;
+        nombre.setText(u.getNombre());
+        contrasena.setText(u.getContrasena());
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT email FROM login WHERE usuario = ?");
+            ps.setString(1, u.getNombre());
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            String em = rs.getString("email");
+            email.setText(em);
+            ps = conn.prepareStatement("SELECT COUNT(*) AS total FROM coches WHERE email = ?");
+            ps.setString(1, em);
+            rs = ps.executeQuery();
+            rs.next();
+            coches.setText(String.valueOf(rs.getInt("total")));
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error con la base de datos:\n" + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     private Estadisticas() {
@@ -43,32 +67,155 @@ public class Estadisticas extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        nombre = new javax.swing.JLabel();
+        contrasena = new javax.swing.JLabel();
+        email = new javax.swing.JLabel();
+        coches = new javax.swing.JLabel();
+        volver = new javax.swing.JButton();
+        exportar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 102, 102));
-        jLabel1.setText("ESTADÍSTICAS PERSONALES");
+        jLabel1.setText("PERFIL PERSONAL");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel2.setText("Nombre de Usuario :");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setText("Contrasena :");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setText("Email :");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel5.setText("Coches en venta :");
+
+        jLabel6.setText("Para ver tus coches en venta consulta el menu de eliminar anuncio ");
+
+        jLabel7.setText("Para cambiar cualquier dato personal contacta con soporte");
+
+        volver.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        volver.setText("VOLVER");
+        volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volverActionPerformed(evt);
+            }
+        });
+
+        exportar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        exportar.setText("Exportar Datos CSV");
+        exportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGap(105, 105, 105))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nombre)
+                    .addComponent(contrasena)
+                    .addComponent(email)
+                    .addComponent(coches))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7)))
+                        .addGap(14, 14, 14))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(volver)
+                        .addGap(56, 56, 56)
+                        .addComponent(exportar)
+                        .addGap(49, 49, 49))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel1)
-                .addContainerGap(262, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(nombre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(contrasena))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(email))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(coches))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(volver)
+                    .addComponent(exportar))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
+        vp.setLocationRelativeTo(null);
+        this.setVisible(false);
+        vp.setVisible(true);
+    }//GEN-LAST:event_volverActionPerformed
+
+    private void exportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportarActionPerformed
+        try {
+            FileWriter fw = new FileWriter("datos.csv");
+            fw.write("usuario,email,cochesEnVenta\n");
+            fw.write(nombre.getText() + "," + email.getText() + "," + coches.getText() + "\n");
+            fw.write("matricula,modelo,color,kilometros,precio\n");
+            PreparedStatement ps = conn.prepareStatement("SELECT matricula,modelo,color,kilometros,precio FROM coches WHERE email = (SELECT email FROM login WHERE usuario = ?)");
+            ps.setString(1, u.getNombre());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                fw.write(rs.getString("matricula") + "," + rs.getString("modelo") + "," + rs.getString("color") + "," + String.valueOf(rs.getInt("kilometros")) + "," + String.valueOf(rs.getDouble("precio")) + "\n");
+            }
+            rs.close();
+            ps.close();
+            JOptionPane.showMessageDialog(null, "Datos personales y de coches exportados con éxito revisa la carpeta del proyecto");
+        } catch (IOException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error -> " + e.getMessage(), "Error Fichero/Base de Datos", JOptionPane.ERROR);
+        }
+    }//GEN-LAST:event_exportarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -96,6 +243,18 @@ public class Estadisticas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel coches;
+    private javax.swing.JLabel contrasena;
+    private javax.swing.JLabel email;
+    private javax.swing.JButton exportar;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel nombre;
+    private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }
