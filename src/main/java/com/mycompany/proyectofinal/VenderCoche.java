@@ -34,8 +34,9 @@ public class VenderCoche extends javax.swing.JFrame {
             PreparedStatement ps = conn.prepareStatement("SELECT email FROM login WHERE usuario = ?");
             ps.setString(1, u.getNombre());
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            email.setText(rs.getString("email"));
+            if (rs.next()) {
+                email.setText(rs.getString("email"));
+            }
             rs.close();
             ps.close();
         } catch (SQLException e) {

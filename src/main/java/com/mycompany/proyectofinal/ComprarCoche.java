@@ -168,12 +168,12 @@ public class ComprarCoche extends javax.swing.JFrame {
         if (fila != -1) {
             try {
                 PreparedStatement ps = conn.prepareStatement("SELECT email FROM coches WHERE matricula = ?");
-                String mat = tabla.getValueAt(fila,4).toString();
+                String mat = tabla.getValueAt(fila, 4).toString();
                 ps.setString(1, mat);
                 ResultSet rs = ps.executeQuery();
-                if(rs.next()){
-                    JOptionPane.showMessageDialog(null, "Email de contacto dle vendedor: " + rs.getString("email"),"Datos vendedor",JOptionPane.INFORMATION_MESSAGE);
-                }else{
+                if (rs.next()) {
+                    JOptionPane.showMessageDialog(null, "Email de contacto del vendedor: " + rs.getString("email"), "Datos vendedor", JOptionPane.INFORMATION_MESSAGE);
+                } else {
                     throw new SQLException(); //No deberia llegar aqui nunca
                 }
                 rs.close();

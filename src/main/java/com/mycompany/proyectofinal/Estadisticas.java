@@ -37,14 +37,16 @@ public class Estadisticas extends javax.swing.JFrame {
             PreparedStatement ps = conn.prepareStatement("SELECT email FROM login WHERE usuario = ?");
             ps.setString(1, u.getNombre());
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            String em = rs.getString("email");
-            email.setText(em);
-            ps = conn.prepareStatement("SELECT COUNT(*) AS total FROM coches WHERE email = ?");
-            ps.setString(1, em);
-            rs = ps.executeQuery();
-            rs.next();
-            coches.setText(String.valueOf(rs.getInt("total")));
+            if (rs.next()) {
+                String em = rs.getString("email");
+                email.setText(em);
+                ps = conn.prepareStatement("SELECT COUNT(*) AS total FROM coches WHERE email = ?");
+                ps.setString(1, em);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    coches.setText(String.valueOf(rs.getInt("total")));
+                }
+            }
             rs.close();
             ps.close();
         } catch (SQLException e) {

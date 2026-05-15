@@ -14,11 +14,10 @@ import javax.swing.*;
  * @author Alumno
  */
 public class VentanaLogin extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaLogin.class.getName());
     private VentanaRegistro vR;
     private Connection conn;
-    private Statement stat;
 
     /**
      * Creates new form VentanaLogin
@@ -28,7 +27,6 @@ public class VentanaLogin extends javax.swing.JFrame {
         password.setEchoChar('*');
         try {
             conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/concesionario", "root", "");
-            stat = conn.createStatement();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error con la base de datos: \n" + e.getMessage(), "Error Base de Datos", JOptionPane.ERROR_MESSAGE);
         }
@@ -169,11 +167,11 @@ public class VentanaLogin extends javax.swing.JFrame {
                                     .addComponent(password)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comprador)
+                                    .addComponent(mostrar)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(vendedor)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(mostrar)))
+                                        .addComponent(comprador)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(vendedor)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -200,12 +198,12 @@ public class VentanaLogin extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(passwdLabel)
                             .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 17, Short.MAX_VALUE)
-                        .addComponent(comprador)
-                        .addGap(5, 5, 5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mostrar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(vendedor)
-                            .addComponent(mostrar))
+                            .addComponent(comprador)
+                            .addComponent(vendedor))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(login)
@@ -260,7 +258,7 @@ public class VentanaLogin extends javax.swing.JFrame {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String passwd = rs.getString("contrasena");
-                if (!passwd.equals(password.getText())) {
+                if (!passwd.equals(new String(password.getPassword()))) {
                     JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Error contraseña", JOptionPane.ERROR_MESSAGE);
                 } else {
                     VentanaPrincipal vp = new VentanaPrincipal(new User(user.getText(), password.getText()), conn);
@@ -278,13 +276,13 @@ public class VentanaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_loginActionPerformed
 
     private void mostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarActionPerformed
-        if (mostrar.isSelected()) {
+        if (!mostrar.isSelected()) {
             password.setEchoChar('*');
         } else {
             password.setEchoChar((char) 0);
         }
     }//GEN-LAST:event_mostrarActionPerformed
-    
+
     public void limpiar() {
         user.setText(null);
         password.setText(null);

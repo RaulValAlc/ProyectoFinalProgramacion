@@ -58,8 +58,8 @@ public class VentanaRegistro extends javax.swing.JFrame {
         etEmail = new javax.swing.JLabel();
         nombre = new javax.swing.JTextField();
         email = new javax.swing.JTextField();
-        contraseña = new javax.swing.JTextField();
-        contraseña2 = new javax.swing.JTextField();
+        contraseña = new javax.swing.JPasswordField();
+        contraseña2 = new javax.swing.JPasswordField();
         icono = new javax.swing.JLabel();
         register = new javax.swing.JButton();
         volver = new javax.swing.JButton();
@@ -232,8 +232,22 @@ public class VentanaRegistro extends javax.swing.JFrame {
         if (!matcher.matches()) {
             errores += "Email inválido, revisa el email introducido \n";
         }
+        if (!errores.contains("Email inválido")) {
+            try {
+                PreparedStatement ps = conn.prepareStatement("SELECT 1 FROM login WHERE email = ?");
+                ps.setString(1, e);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    errores += "Email ya registrado \n";
+                }
+                rs.close();
+                ps.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error con la base de datos: \n" + ex.getMessage(), "Error Base de Datos", JOptionPane.ERROR_MESSAGE);
+            }
+        }
         // Validación de las contraseñas
-        String p = contraseña.getText();
+        String p = new String(contraseña.getPassword());
         if (!p.isBlank()) {
             if (p.length() < 8) {
                 errores += "Contraseña muy corta \n";
@@ -257,7 +271,7 @@ public class VentanaRegistro extends javax.swing.JFrame {
         if (!valida) {
             errores += "La contraseña debe contener al menos 1 carácter especial \n";
         }
-        if (!p.equals(contraseña2.getText())) {
+        if (!p.equals(new String(contraseña2.getPassword()))) {
             errores += "Las contraseñas no coinciden \n";
         }
         //Envío final
@@ -337,8 +351,8 @@ public class VentanaRegistro extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField contraseña;
-    private javax.swing.JTextField contraseña2;
+    private javax.swing.JPasswordField contraseña;
+    private javax.swing.JPasswordField contraseña2;
     private javax.swing.JTextField email;
     private javax.swing.JLabel etConfContraseña;
     private javax.swing.JLabel etContraseña;

@@ -295,7 +295,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             this.setVisible(false);
             e.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Contraseña errónea", JOptionPane.CANCEL_OPTION);
+            JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Contraseña errónea", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_statsActionPerformed
 
