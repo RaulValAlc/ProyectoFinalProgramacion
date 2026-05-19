@@ -79,11 +79,12 @@ Estos valores están configurados en `VentanaLogin.java:29`.
   - Si la BD tiene contraseñas en texto plano (versiones antiguas), las detecta, migra automáticamente a bcrypt e inicia sesión.
   - Si la BD tiene hashes bcrypt truncados (columna `VARCHAR(30)` en vez de `VARCHAR(60)`), los recupera usando la sal del hash truncado y los migra a hash completo.
   - Al iniciar, la aplicación ejecuta `ALTER TABLE login MODIFY contrasena VARCHAR(60) NOT NULL` para corregir el esquema automáticamente.
-- Se usa `try-with-resources` para cerrar automáticamente conexiones JDBC y evitar fugas de recursos.
 - Se validan campos vacíos antes de cualquier operación para evitar errores.
 - `BCrypt.checkpw()` captura `IllegalArgumentException` para manejar hashes inválidos sin romper la aplicación.
 
 ## Ejecución
+
+Inicia XAMPP y abre los puertos de `Apache` y de `MySQL`, e importa dentro de `phpMyAdmin` la base de datos del archivo `Importar.sql` a una base de datos `concesionario`
 
 Desde NetBeans: abre el proyecto y ejecuta `ProyectoFinal.java` (main class: `com.mycompany.proyectofinal.ProyectoFinal`).
 
